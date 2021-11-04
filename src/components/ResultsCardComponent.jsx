@@ -4,6 +4,7 @@
 */
 import "./ResultsCardComponent.css";
 import {useState} from "react";
+import {fetchWeatherData} from '../api/weather'
 
 const ResultsCardComponent = ({cityProp}) => {
 
@@ -15,7 +16,7 @@ const ResultsCardComponent = ({cityProp}) => {
 
   /* I created an object that stores the api key and base URL of the weather APi */
   const api = {
-    key: process.env.REACT_APP_OPEN_WEATHER_MAP_API_KEY,
+    key: "bc12083e70d2d22298c2df1cec7101d9",
     base: "https://api.openweathermap.org/data/2.5/"
   }
 
@@ -25,16 +26,9 @@ const ResultsCardComponent = ({cityProp}) => {
   */
   const getWeatherData = () => {
     if(cityProp.length > 1){
-      (async () => {
-        let weatherData;
-        try {
-          const response = await fetch(`${api.base}weather?q=${cityProp}&units=metric&APPID=${api.key}`);
-          weatherData = (await response.json());
-          handleData(weatherData);
-        }catch (errors){
-          console.log(`No such City/Town. Please enter the correct name.`);
-        }
-      })();
+      fetchWeatherData(cityProp)
+      .then(data => handleData(data))
+      .catch(err => console.log(err))
     }
   };
 
